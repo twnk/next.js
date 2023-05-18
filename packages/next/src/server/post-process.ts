@@ -48,7 +48,7 @@ async function processHTML(
 
   const { parse } =
     require('next/dist/compiled/node-html-parser') as typeof import('next/dist/compiled/node-html-parser')
-  const root: HTMLElement = parse(html)
+  let root: HTMLElement | null = null
   let document = html
 
   // Calls the middleware, with some instrumentation and logging
@@ -67,6 +67,7 @@ async function processHTML(
   for (let i = 0; i < middlewareRegistry.length; i++) {
     let middleware = middlewareRegistry[i]
     if (!middleware.condition || middleware.condition(options)) {
+      let root ??= parse(html)
       await callMiddleWare(middlewareRegistry[i].middleware)
     }
   }
